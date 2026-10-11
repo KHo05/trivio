@@ -74,9 +74,64 @@ function badge(text, color) { return `<span class="badge b-${color}">${esc(text)
 function daysBadge(iso) { const d = daysUntil(iso); if (d < 0) return `<span class="days-left bad">${t("daysOver", { n: -d })}</span>`; if (d <= 30) return `<span class="days-left warn">${t("daysLeft", { n: d })}</span>`; return `<span class="days-left ok">${t("daysLeft", { n: d })}</span>`; }
 function prBadge(s) { const m = { pending: ["prPending", "amber"], approved: ["prApproved", "blue"], ordered: ["prOrdered", "teal"], delivering: ["prDelivering", "amber"], delivered: ["prDelivered", "green"] }; const [k, c] = m[s] || ["prPending", "gray"]; return badge(t(k), c); }
 function calcHours(a, b) { const [h1, m1] = a.split(":").map(Number); const [h2, m2] = b.split(":").map(Number); return Math.max(0, Math.round(((h2 * 60 + m2) - (h1 * 60 + m1)) / 6) / 10 - 1); }
-function downloadCsv(filename, rows) {
-  const csv = "﻿" + rows.map((r) => r.map((c) => { const s = String(c ?? ""); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; }).join(",")).join("\r\n");
-  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })); a.download = filename; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 400);
+/* ---------- real Excel export (.xlsx, no library) ----------
+   Builds a minimal OOXML workbook: bold title row, grey header, number
+   columns formatted #,##0.00, column widths, frozen header, totals row. */
+const CRC_T = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(u8) { let c = 0xFFFFFFFF; for (let i = 0; i < u8.length; i++) c = CRC_T[(c ^ u8[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+function zipStore(files) { /* files: [{name, text}] → Blob (method "stored") */
+  const enc = new TextEncoder(); const parts = []; const cd = []; let off = 0;
+  const d = new Date(); const dosTime = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1); const dosDate = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate();
+  const u16 = (n) => [n & 255, (n >> 8) & 255], u32 = (n) => [n & 255, (n >> 8) & 255, (n >> 16) & 255, (n >>> 24) & 255];
+  for (const f of files) { const name = enc.encode(f.name), data = enc.encode(f.text), crc = crc32(data);
+    const head = new Uint8Array([...u32(0x04034b50), ...u16(20), ...u16(0x0800), ...u16(0), ...u16(dosTime), ...u16(dosDate), ...u32(crc), ...u32(data.length), ...u32(data.length), ...u16(name.length), ...u16(0), ...name]);
+    parts.push(head, data);
+    cd.push(new Uint8Array([...u32(0x02014b50), ...u16(20), ...u16(20), ...u16(0x0800), ...u16(0), ...u16(dosTime), ...u16(dosDate), ...u32(crc), ...u32(data.length), ...u32(data.length), ...u16(name.length), ...u16(0), ...u16(0), ...u16(0), ...u16(0), ...u32(0), ...u32(off), ...name]));
+    off += head.length + data.length; }
+  const cdLen = cd.reduce((a, b) => a + b.length, 0);
+  parts.push(...cd, new Uint8Array([...u32(0x06054b50), ...u16(0), ...u16(0), ...u16(files.length), ...u16(files.length), ...u32(cdLen), ...u32(off), ...u16(0)]));
+  return new Blob(parts, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+}
+const xe = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+function colRef(i) { let s = ""; i += 1; while (i > 0) { const m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; }
+/* opts: { sheet, title, subtitle, headers, rows, numCols:[idx], widths:[ch], totals:[row values or null] } */
+function downloadXlsx(filename, o) {
+  const numSet = new Set(o.numCols || []); const out = []; let r = 1;
+  const cell = (ci, v, style) => typeof v === "number" ? `<c r="${colRef(ci)}${r}" s="${style}"><v>${v}</v></c>` : `<c r="${colRef(ci)}${r}" s="${style}" t="inlineStr"><is><t xml:space="preserve">${xe(v)}</t></is></c>`;
+  const row = (vals, styleFn, ht) => { out.push(`<row r="${r}"${ht ? ` ht="${ht}" customHeight="1"` : ""}>${vals.map((v, i) => (v === null || v === undefined) ? "" : cell(i, v, styleFn(i, v))).join("")}</row>`); r++; };
+  if (o.title) row([o.title], () => 1, 24);
+  if (o.subtitle) row([o.subtitle], () => 6);
+  if (o.title || o.subtitle) r++;
+  const headerRow = r; row(o.headers, (i) => numSet.has(i) ? 7 : 2, 20);
+  for (const rv of o.rows) row(rv, (i, v) => numSet.has(i) && typeof v === "number" ? 3 : 0);
+  if (o.totals) row(o.totals, (i, v) => numSet.has(i) && typeof v === "number" ? 4 : 5);
+  const widths = (o.widths || o.headers.map(() => 14)).map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join("");
+  const sheet = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0" showGridLines="0"><pane ySplit="${headerRow}" topLeftCell="A${headerRow + 1}" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="16"/><cols>${widths}</cols><sheetData>${out.join("")}</sheetData><pageSetup orientation="landscape" fitToWidth="1" fitToHeight="0"/></worksheet>`;
+  const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="#,##0.00"/></numFmts><fonts count="4"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="14"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font><font><sz val="10"/><color rgb="FF6B7A89"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFEEF1F4"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="3"><border><left/><right/><top/><bottom/><diagonal/></border><border><left/><right/><top/><bottom style="thin"><color rgb="FF9AA5B1"/></bottom><diagonal/></border><border><left/><right/><top style="thin"><color rgb="FF16222F"/></top><bottom style="double"><color rgb="FF16222F"/></bottom><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="8"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="2" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="164" fontId="2" fillId="0" borderId="2" xfId="0" applyNumberFormat="1" applyFont="1" applyBorder="1"/><xf numFmtId="0" fontId="2" fillId="0" borderId="2" xfId="0" applyFont="1" applyBorder="1"/><xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="2" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+  const files = [
+    { name: "[Content_Types].xml", text: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>` },
+    { name: "_rels/.rels", text: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>` },
+    { name: "xl/workbook.xml", text: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="${xe((o.sheet || "Sheet1").slice(0, 31))}" sheetId="1" r:id="rId1"/></sheets></workbook>` },
+    { name: "xl/_rels/workbook.xml.rels", text: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>` },
+    { name: "xl/styles.xml", text: styles },
+    { name: "xl/worksheets/sheet1.xml", text: sheet },
+  ];
+  const a = document.createElement("a"); a.href = URL.createObjectURL(zipStore(files)); a.download = filename; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800);
+}
+/* ---------- clean printing: the document is rendered alone in a hidden frame ---------- */
+function printDoc(title, bodyHtml) {
+  const css = `*{box-sizing:border-box;margin:0;padding:0}html{-webkit-print-color-adjust:exact;print-color-adjust:exact}body{font:11.5pt/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",Helvetica,Arial,sans-serif;color:#121B26;padding:14mm 14mm;font-variant-numeric:tabular-nums}
+  .doc-head{display:flex;justify-content:space-between;gap:14px;padding-bottom:10px;border-bottom:2px solid #121B26;margin-bottom:14px}.doc-head .co{font-size:14pt;font-weight:700}.doc-head .sub{color:#5B6878;font-size:9.5pt}.right{text-align:right}
+  h2{font-size:13pt;margin:0 0 6px}.kv{display:grid;grid-template-columns:max-content 1fr;gap:3px 18px;margin-bottom:14px;font-size:10.5pt}.kv dt{color:#6B7A89}.kv dd{font-weight:600}
+  table{width:100%;border-collapse:collapse}thead{display:table-header-group}tfoot{display:table-row-group}tr{page-break-inside:avoid;break-inside:avoid}th{text-align:left;font-size:8.5pt;letter-spacing:.06em;text-transform:uppercase;color:#5B6878;background:#EEF1F4;padding:7px 8px;border-bottom:1px solid #9AA5B1}td{padding:7px 8px;border-bottom:1px solid #D9DFE6;vertical-align:top}.num{text-align:right;white-space:nowrap}.strong{font-weight:700}
+  tr.total td{border-top:1.5px solid #121B26;border-bottom:3px double #121B26;font-weight:700;font-size:12pt;padding-top:9px}tfoot td{font-weight:700;background:#F6F8FA;border-top:1.5px solid #121B26}
+  .wide{font-size:10pt}.wide td,.wide th{padding:5px 6px}.wide td:first-child{white-space:nowrap}
+  .foot{margin-top:18px;color:#6B7A89;font-size:9pt}.sig{display:flex;gap:40px;margin-top:28px;break-inside:avoid}.sig div{flex:1;border-top:1px solid #121B26;padding-top:6px;font-size:9.5pt;color:#5B6878}@page{margin:0}`;
+  const html = `<!DOCTYPE html><html lang="${document.documentElement.lang}"><head><meta charset="utf-8"><title>${esc(title)}</title><style>${css}</style></head><body>${bodyHtml}</body></html>`;
+  const fr = document.createElement("iframe"); fr.setAttribute("aria-hidden", "true"); fr.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;opacity:0";
+  document.body.appendChild(fr); const w = fr.contentWindow; w.document.open(); w.document.write(html); w.document.close();
+  const go = () => { try { w.focus(); w.print(); } catch (e) { /* ok */ } setTimeout(() => fr.remove(), 60000); };
+  if (w.document.readyState === "complete") setTimeout(go, 80); else w.addEventListener("load", () => setTimeout(go, 80));
 }
 function stampCard(name, label) {
   const d = NOW.toLocaleDateString(LANG === "zh" ? "zh-CN" : "en-MY", { year: "numeric", month: "long", day: "numeric", weekday: "short" });
