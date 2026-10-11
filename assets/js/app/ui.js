@@ -51,12 +51,19 @@ function toast(msg, kind = "ok") {
   el.innerHTML = `${icon(kind === "warn" ? "alert" : "check", 20)}<span>${esc(msg)}</span>`; root.appendChild(el);
   clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.classList.add("out"); setTimeout(() => el.remove(), 320); }, 3600);
 }
+/* phones: tables become stacked cards — each cell carries its column header as a label */
+function mobilizeTables(root) {
+  root.querySelectorAll("table.tbl").forEach((tb) => {
+    const heads = [...tb.querySelectorAll("thead th")].map((th) => th.textContent.trim());
+    tb.querySelectorAll("tbody tr, tfoot tr").forEach((tr) => { let ci = 0; [...tr.children].forEach((td) => { const l = heads[ci] || ""; if (l) td.dataset.label = l; else td.removeAttribute("data-label"); ci += td.colSpan || 1; }); });
+  });
+}
 function openModal({ title, body, foot = "", wide = false, onOpen }) {
   const root = document.getElementById("modal-root");
   root.innerHTML = `<div class="modal-overlay"><div class="modal ${wide ? "wide" : ""}" role="dialog" aria-modal="true" aria-label="${esc(title)}">
     <div class="modal-head"><h3>${title}</h3><button class="icon-btn spacer" data-close="1" aria-label="${esc(t("close"))}" style="width:38px;height:38px">${icon("x", 18)}</button></div>
     <div class="modal-body">${body}</div>${foot ? `<div class="modal-foot">${foot}</div>` : ""}</div></div>`;
-  const ov = root.firstElementChild;
+  const ov = root.firstElementChild; mobilizeTables(ov);
   let downOnBackdrop = false;
   ov.addEventListener("pointerdown", (e) => { downOnBackdrop = e.target === ov; });
   ov.addEventListener("click", (e) => { if ((e.target === ov && downOnBackdrop) || e.target.closest("[data-close]")) closeModal(); });

@@ -14,7 +14,7 @@ const L = {
     fc1: "阿末 已打卡 · 07:02", fc2: "水泥库存低 — 建议补货", fc3: "工资单已生成 · 11 人",
     st1: "个系统，替代一堆 Excel 和群组", st2: "个模块，按需订阅", st3: "步内完成打卡、请假、报销", st4: "核心平台，免费开始",
     mod_eyebrow: "产品模块", mod_h2: "生意的每一块，都有自己的位子", mod_sub: "每个模块独立订阅、独立好用，合在一起就是一个完整的系统。数据只输入一次，考勤自动算进工资，采购自动变成账目。",
-    gate_eyebrow: "按需订阅", gate_h2: "只付你用的，界面也只显示你开的", gate_sub: "没订阅的模块不会出现在你员工的系统里 — 不收费，也不碍眼。试试下面的开关，右边就是你公司会看到的样子。",
+    gate_eyebrow: "按需订阅", gate_sub_m: "没订阅的模块不会出现在你员工的系统里 — 不收费，也不碍眼。试试开关，下面的预览就是你公司会看到的样子。", swipe_hint: "左右滑动查看全部模块", mnav_wa: "WhatsApp 我们", mcta_demo: "打开互动演示", gate_h2: "只付你用的，界面也只显示你开的", gate_sub: "没订阅的模块不会出现在你员工的系统里 — 不收费，也不碍眼。试试下面的开关，右边就是你公司会看到的样子。",
     gate_pick: "选你需要的模块", gate_pick_sub: "随时可以加，随时可以停。", gate_company: "你的公司", gate_core: "核心平台（免费）",
     gate_mods: "{n} 个模块 × RM 59", gate_cap: "4 个起封顶 · Trivo One", gate_per: "/ 月 · 整个团队", gate_note: "示例价格 · 适用 50 人以下团队", gate_none: "还没开任何模块 — 左边选一个试试",
     gp_att: "今日出勤", gp_hr: "待审批", gp_task: "进行中任务", gp_inv: "低库存材料", gp_fleet: "车辆运作中", gp_acc: "本月未收款", gp_dash: "工作台",
@@ -41,7 +41,7 @@ const L = {
     fc1: "Ahmad clocked in · 07:02", fc2: "Cement stock low — restock", fc3: "Payslips generated · 11 staff",
     st1: "system instead of scattered Excel & chats", st2: "modules, subscribe to what you need", st3: "taps to clock in, apply leave, claim", st4: "core platform, start free",
     mod_eyebrow: "Modules", mod_h2: "Every part of the business has its place", mod_sub: "Each module works on its own and they click together into one system. Enter data once: attendance flows into payroll, purchases flow into the books.",
-    gate_eyebrow: "Pick & pay", gate_h2: "Pay only for what you use — and see only what you pay for", gate_sub: "Modules you haven't subscribed to never appear in your team's app. No charge, no clutter. Try the switches — the right side is exactly what your company would see.",
+    gate_eyebrow: "Pick & pay", gate_sub_m: "Modules you haven't subscribed to never appear in your team's app. No charge, no clutter. Flip a switch — the preview below is what your company sees.", swipe_hint: "Swipe to see all modules", mnav_wa: "WhatsApp us", mcta_demo: "Open the interactive demo", gate_h2: "Pay only for what you use — and see only what you pay for", gate_sub: "Modules you haven't subscribed to never appear in your team's app. No charge, no clutter. Try the switches — the right side is exactly what your company would see.",
     gate_pick: "Choose your modules", gate_pick_sub: "Add or stop any month.", gate_company: "Your company", gate_core: "Core platform (free)",
     gate_mods: "{n} modules × RM 59", gate_cap: "Capped from 4 · Trivo One", gate_per: "/ month · whole team", gate_note: "Sample pricing · teams up to 50 people", gate_none: "No modules on yet — flip a switch on the left",
     gp_att: "Attendance today", gp_hr: "Awaiting approval", gp_task: "Open tasks", gp_inv: "Low-stock items", gp_fleet: "Vehicles active", gp_acc: "Unpaid invoices", gp_dash: "Dashboard",
@@ -103,7 +103,7 @@ function applyLang() {
   document.querySelectorAll("[data-i-html]").forEach((el) => { el.innerHTML = t(el.dataset.iHtml); });
   document.getElementById("lang-zh").classList.toggle("on", LANG === "zh");
   document.getElementById("lang-en").classList.toggle("on", LANG === "en");
-  renderModules(); renderGate(); renderFaq(); DECK.renderDots();
+  renderModules(); renderGate(); renderFaq(); DECK.renderDots(); DECK.flowReveals(); if (DECK.syncModDots) DECK.syncModDots();
 }
 function setLang(l) { LANG = l; try { localStorage.setItem("trivo_lang", l); } catch (e) { /* ok */ } applyLang(); }
 
@@ -213,11 +213,12 @@ const DECK = {
     nav.innerHTML = this.pages.map((p, k) => `<button data-dot="${k}" class="${k === this.i ? "on" : ""}" aria-label="${PAGE_LABELS[p.dataset.page][LANG]}"><span>${PAGE_LABELS[p.dataset.page][LANG]}</span></button>`).join("");
     nav.querySelectorAll("[data-dot]").forEach((b) => b.addEventListener("click", () => this.go(+b.dataset.dot)));
   },
+  /* flow mode: reveal on scroll. Safe to call repeatedly — re-rendered content (modules, gate, FAQ, language switch) gets observed too. */
   flowReveals() {
     if (!this.flow) return;
     if (!("IntersectionObserver" in window)) { document.querySelectorAll(".rv").forEach((el) => el.classList.add("in")); return; }
-    const io = new IntersectionObserver((es) => es.forEach((x) => { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } }), { threshold: .1 });
-    document.querySelectorAll(".rv").forEach((el) => io.observe(el));
+    if (!this.io) this.io = new IntersectionObserver((es) => es.forEach((x) => { if (x.isIntersecting) { x.target.classList.add("in"); this.io.unobserve(x.target); } }), { threshold: .08, rootMargin: "0px 0px -6% 0px" });
+    document.querySelectorAll(".rv:not(.in)").forEach((el) => this.io.observe(el));
   },
   /* subtle 3D: the hero phone, preview and stamp card lean toward the cursor */
   initTilt() {
@@ -234,6 +235,17 @@ const DECK = {
 };
 
 /* ---------------- nav / drawer ---------------- */
+function initMobile() {
+  /* module carousel indicator */
+  const grid = document.getElementById("mod-grid"), dots = document.getElementById("mod-dots");
+  const sync = () => { const cards = grid.children; if (!cards.length) return; if (dots.children.length !== cards.length) dots.innerHTML = [...cards].map(() => "<i></i>").join(""); const mid = grid.scrollLeft + grid.clientWidth / 2; let best = 0, bd = 1e9; [...cards].forEach((c, i) => { const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (d < bd) { bd = d; best = i; } }); [...dots.children].forEach((d, i) => d.classList.toggle("on", i === best)); };
+  grid.addEventListener("scroll", () => requestAnimationFrame(sync), { passive: true }); window.addEventListener("resize", sync); DECK.syncModDots = sync; sync();
+  /* sticky CTA bar: shows once the hero's own buttons have scrolled away */
+  const bar = document.getElementById("mcta"), heroCtas = document.querySelector(".hero .hero-ctas"), finalCtas = document.querySelector(".final .hero-ctas");
+  if ("IntersectionObserver" in window && heroCtas && finalCtas) { let heroGone = false, finalSeen = false; const upd = () => bar.classList.toggle("show", heroGone && !finalSeen);
+    new IntersectionObserver((es) => es.forEach((x) => { heroGone = !x.isIntersecting && x.boundingClientRect.top < 0; upd(); }), { threshold: 0 }).observe(heroCtas);
+    new IntersectionObserver((es) => es.forEach((x) => { finalSeen = x.isIntersecting; upd(); }), { threshold: 0, rootMargin: "0px 0px 20% 0px" }).observe(finalCtas); }
+}
 function initNav() {
   const mnav = document.getElementById("mnav");
   document.getElementById("burger").addEventListener("click", () => mnav.classList.add("open"));
@@ -247,3 +259,4 @@ document.getElementById("lang-en").addEventListener("click", () => setLang("en")
 initNav();
 DECK.init();
 applyLang();
+initMobile();

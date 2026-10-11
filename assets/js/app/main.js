@@ -50,7 +50,7 @@ const APP = {
     root.querySelector("#btn-bell").addEventListener("click", () => this.openNotifications());
     root.querySelector("#btn-menu").addEventListener("click", () => document.body.classList.toggle("nav-open"));
     root.querySelector("#nav-scrim").addEventListener("click", () => document.body.classList.remove("nav-open"));
-    const vr = root.querySelector("#view-root");
+    const vr = root.querySelector("#view-root"); mobilizeTables(vr);
     if (locked) wireLocked(vr); else if (view.w) view.w(vr);
   },
   openNotifications() {

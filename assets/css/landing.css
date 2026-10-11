@@ -388,6 +388,7 @@ footer { width: 100%; border-top: 1px solid var(--line); padding: 26px 0 calc(18
 .mnav.open .mnav-panel { transform: none; }
 .mnav-panel a { padding: 14px 4px; font-size: 1.05rem; font-weight: 600; border-bottom: 1px solid var(--line); }
 .mnav-panel .btn { margin-top: 22px; }
+.mnav-panel .mnav-wa { margin-top: 10px; color: var(--ink); gap: 9px; } .mnav-panel .mnav-wa svg { color: #25D366; }
 .mnav-close { align-self: flex-end; width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; color: var(--ink-2); }
 
 /* ============================================================
@@ -442,4 +443,108 @@ html.flow .stage, html.flow .gate-preview, html.flow .stamp-card { transform: no
   .nav-inner { gap: 12px; height: 60px; }
   .float-chip { font-size: .72rem; padding: 8px 12px; }
   .fc-1 { top: -18px; right: 0; } .fc-2 { bottom: 26%; right: 0; } .fc-3 { bottom: -14px; left: 0; }
+}
+
+/* ============================================================
+   MOBILE LAYER — phones get their own composition: stacked,
+   airy sections, native swipe where a grid would be a wall,
+   sticky bottom action bar, no 3D rigs.
+   ============================================================ */
+.only-m { display: none; }
+.mcta { display: none; }
+@media (max-width: 620px) {
+  .only-m { display: block; } .only-d { display: none; }
+  html.flow .page { min-height: 0; }
+  html.flow .page[data-page="hero"] { min-height: calc(var(--vh) * 100); }
+  html.flow .page-inner { padding: 44px 0 52px; justify-content: flex-start; }
+  html.flow .page[data-page="hero"] .page-inner { padding-top: 22px; justify-content: center; }
+  .wrap { width: min(var(--pagew), 100% - 36px); }
+  .sec-head { margin-bottom: 22px; }
+  .sec-head h2 { font-size: 1.62rem; line-height: 1.2; }
+  .sec-head p { font-size: .95rem; }
+  .btn { min-height: 48px; } .btn-lg { min-height: 54px; font-size: 1rem; }
+
+  /* nav: brand + language + menu. The demo button lives in the drawer and the bottom bar. */
+  .nav-inner { height: 58px; gap: 10px; }
+  .nav-right { gap: 8px; margin-left: auto; }
+  .nav-right > .btn-primary { display: none; }
+  .lang-seg button { padding: 4px 9px; min-height: 30px; }
+  .nav-burger { width: 42px; height: 42px; padding: 0; }
+
+  /* hero */
+  .hero-inner { gap: 34px; }
+  .hero h1 { font-size: 2.15rem; margin-bottom: 14px; }
+  .hero-sub { font-size: .98rem; }
+  .hero-ctas { gap: 10px; margin-bottom: 20px; }
+  .hero-points { flex-direction: column; align-items: flex-start; gap: 9px; width: max-content; max-width: 100%; margin-inline: auto; }
+  .stage { transform: none !important; margin: 10px auto 0; width: min(280px, 72vw); }
+  .phone { width: 100%; }
+  .float-chip { display: none; }
+  .fc-1 { display: flex; top: -12px; right: -8px; }
+  .strip-inner { padding: 14px 0; }
+  .strip-item b { font-size: 1.3rem; }
+  .strip-item span { font-size: .76rem; }
+
+  /* modules: one card at a time, native snap */
+  .mod-grid { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin: 0 -18px; padding: 6px 18px 10px; scroll-padding: 0 18px; }
+  .mod-grid::-webkit-scrollbar { display: none; }
+  .mod-card { flex: 0 0 82%; scroll-snap-align: center; grid-template-rows: auto auto auto 1fr; padding: 18px 18px 16px; }
+  html.flow .page .mod-grid .rv { opacity: 1 !important; transform: none !important; transition: none; }
+  .mod-card:hover { transform: none; }
+  .mod-card > p { min-height: 0; -webkit-line-clamp: 3; }
+  .mod-dots { display: flex; justify-content: center; gap: 6px; margin-top: 6px; }
+  .mod-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line-strong); transition: width .25s var(--ease), background .25s; }
+  .mod-dots i.on { width: 18px; border-radius: 3px; background: var(--teal); }
+  .swipe-hint { text-align: center; color: var(--ink-3); font-size: .76rem; margin-top: 8px; letter-spacing: .02em; }
+
+  /* gating */
+  .gate-wrap { gap: 18px; padding: 18px 14px; border-radius: 18px; }
+  .gate-stage { perspective: none; }
+  .gate-preview { box-shadow: 0 24px 50px -30px rgba(3,6,12,.9); }
+
+  /* workers */
+  .worker-wrap { gap: 30px; }
+  .stamp-stage { perspective: none; }
+  .stamp-card { width: 100%; box-shadow: 0 24px 50px -30px rgba(3,6,12,.9); }
+
+  /* pricing: compact cards, price beside the name */
+  .price-grid { gap: 12px; perspective: none; max-width: none; }
+  .price-card { padding: 18px 18px 16px; border-radius: 16px; transform: none !important; }
+  .price-card.hot { transform: none !important; }
+  .price-name { font-size: 1.02rem; }
+  .price-for { min-height: 0; }
+  .price-amt { margin: 8px 0 2px; }
+  .price-amt b { font-size: 1.75rem; }
+  .price-feats { gap: 5px; margin: 10px 0 14px; }
+  .price-feats li { font-size: .86rem; }
+  .price-card .btn { min-height: 44px; }
+
+  /* steps + faq */
+  .steps { gap: 10px; }
+  .faq-wrap { gap: 12px; }
+
+  /* contact + footer */
+  .final-mark { width: 58px; margin-bottom: 14px; }
+  .final h2 { font-size: 1.7rem; }
+  .final p { margin-bottom: 20px; }
+  .foot-inner { gap: 22px; }
+  .foot-links { gap: 28px; }
+  .foot-base { flex-direction: column; gap: 6px; }
+  .foot-base .spacer { margin-left: 0; }
+  html.flow .page[data-page="contact"] .page-inner { padding-bottom: 40px; }
+
+  /* sticky bottom action bar */
+  .mcta { display: flex; gap: 8px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 150; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: rgba(9, 14, 22, .92); border-top: 1px solid var(--line); transform: translateY(110%); transition: transform .32s var(--ease); will-change: transform; }
+  .mcta.show { transform: none; }
+  .mcta .btn-primary { flex: 1; min-height: 48px; }
+  .mcta-wa { width: 48px; min-height: 48px; padding: 0; flex: 0 0 48px; color: #25D366; }
+  .mnav.open ~ .mcta, .mnav.open + .mcta { transform: translateY(110%); }
+}
+@media (max-width: 380px) {
+  .hero h1 { font-size: 1.95rem; }
+  .mod-card { flex-basis: 86%; }
+}
+@media (max-width: 620px) {
+  /* soften the seams between section atmospheres */
+  html.flow .page:not([data-page="hero"]) .page-bg { -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent); }
 }

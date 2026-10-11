@@ -357,6 +357,8 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
 .sub-total b { font-size: 1.5rem; }
 .sub-cap { margin-left: auto; font-size: .8rem; color: var(--teal-ink); font-weight: 600; }
 
+.fleet-grid { grid-template-columns: minmax(0, 1.6fr) minmax(250px, 1fr); align-items: start; }
+.fleet-list { max-height: 470px; overflow-y: auto; }
 /* fleet map */
 .map-stage { position: relative; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); box-shadow: var(--sh-2); background: #DCE7EF; }
 .map-stage svg.basemap { display: block; width: 100%; height: auto; }
@@ -489,3 +491,63 @@ select.input { appearance: none; background-image: url("data:image/svg+xml,%3Csv
 /* orphan worker tile becomes a full-width row */
 .wk-tile.wide { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 14px; row-gap: 2px; align-items: center; }
 .wk-tile.wide .wk-ico { grid-row: 1 / 3; }
+
+/* ============================================================
+   PHONE LAYER for the management views — stacked, not squeezed
+   ============================================================ */
+@media (max-width: 640px) {
+  .content { padding: 14px 14px 72px; }
+  .page-title { font-size: 1.2rem; } .page-sub { margin-bottom: 14px; }
+  .toolbar { gap: 8px; }
+  .toolbar .seg { width: 100%; display: flex; }
+  .toolbar .seg button { flex: 1; padding-inline: 6px; }
+  .toolbar .spacer { display: none; }
+  .toolbar .btn { flex: 1 1 calc(50% - 4px); min-width: 0; }
+  .toolbar .search-box { flex: 1 1 100%; max-width: none !important; }
+  .pill-row { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -14px; padding: 0 14px 4px; -webkit-overflow-scrolling: touch; }
+  .pill-row::-webkit-scrollbar { display: none; }
+  .fleet-grid { grid-template-columns: 1fr; }
+  .fleet-list { max-height: none; }
+  .card-head { flex-wrap: wrap; }
+  .card-head .btn { flex: 1 1 100%; }
+  .section-title { margin: 18px 0 10px; }
+  .locked-view { margin: 10px auto; }
+  .locked-feats { grid-template-columns: 1fr; }
+  .sub-row { flex-wrap: wrap; gap: 10px 12px; }
+  .sub-row .sub-price { margin-left: auto; }
+  .sub-total { gap: 8px; } .sub-cap { flex-basis: 100%; margin-left: 0; }
+  .appr-row { padding: 12px 14px; }
+  .task-col { padding: 8px; }
+
+  /* tables → cards: two label/value tiles per row, identity cell on top, wide cells span */
+  .table-wrap { overflow: visible; }
+  .tbl thead { display: none; }
+  .tbl, .tbl tbody, .tbl tfoot { display: block; width: 100%; }
+  .tbl tr { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; padding: 12px 14px 13px; border-bottom: 1px solid var(--line); }
+  .tbl tbody tr:last-child { border-bottom: 0; }
+  .tbl tbody tr:hover { background: transparent; }
+  .tbl tfoot tr { background: var(--surface-2); border-top: 1px solid var(--line); border-radius: 0 0 var(--r-lg) var(--r-lg); }
+  .tbl td { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 0; border: 0; text-align: left; min-width: 0; }
+  .tbl td::before { content: attr(data-label); color: var(--ink-3); font-size: .7rem; font-weight: 650; text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; }
+  .tbl td:not([data-label])::before { display: none; }
+  .tbl td:empty, .tbl td:has(> svg:only-child) { display: none; }
+  .tbl td:first-child { grid-column: 1 / -1; font-size: 1rem; }
+  .tbl td:first-child::before { display: none; }
+  .tbl td:has(.btn), .tbl td:has(.progress), .tbl td:has(.flex), .tbl td:has(.person) { grid-column: 1 / -1; }
+  .tbl td:has(.btn):not(:first-child) { padding-top: 4px; }
+  .tbl td .btn { width: 100%; }
+  .tbl td.num { font-variant-numeric: tabular-nums; text-align: left; }
+  .tbl td > .flex { width: 100%; }
+  .tbl td > .flex .progress { flex: 1; }
+  .tbl td .person { width: 100%; }
+  .tbl td.strong > div.muted { display: inline; margin-left: 6px; font-weight: 500; }
+  .tbl td.nowrap { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 2px 6px; }
+  .tbl td.nowrap::before { flex-basis: 100%; }
+  .tbl tfoot td:first-child { font-size: .9rem; color: var(--ink-3); }
+  .tbl td > .days-left { margin-left: 6px; }
+  /* a trailing status badge floats beside the name, like a real card */
+  .tbl tbody tr { position: relative; }
+  .tbl tbody td:last-child:has(> .badge:only-child) { position: absolute; top: 12px; right: 14px; }
+  .tbl tbody td:last-child:has(> .badge:only-child)::before { display: none; }
+  .tbl tbody tr:has(td:last-child > .badge:only-child) td:first-child { padding-right: 96px; }
+}
