@@ -1,0 +1,17 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.log
+
+# never commit private business material
+*.pdf
+*.docx
+*.xlsx
+_chat.txt
+*-PHOTO-*.jpg
+*-STICKER-*.webp
+*.opus
+
+# local tooling
+node_modules/
+.vercel/

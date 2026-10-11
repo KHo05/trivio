@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Trivo — 一个团队，一个系统 · One team, one system</title>
+<meta name="description" content="Trivo 把考勤、人事工资、任务、库存采购、车队机械和账务放进同一个系统。按模块订阅，用哪个开哪个。为马来西亚中小企业打造。">
+<meta property="og:title" content="Trivo — One team, one system">
+<meta property="og:description" content="Modular operations platform for Malaysian SMEs. Subscribe only to the modules you need.">
+<meta name="theme-color" content="#0A101B">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/landing.css">
+</head>
+<body>
+
+<!-- ======================= NAV ======================= -->
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a class="logo" href="#top" aria-label="Trivo">
+      <svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true">
+        <defs><linearGradient id="tg1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#23E2C2"/><stop offset="1" stop-color="#4D7CF7"/>
+        </linearGradient></defs>
+        <path d="M8 42 V14 a6 6 0 0 1 6-6 h36 a6 6 0 0 1 6 6 v36 a6 6 0 0 1-6 6 H26" fill="none" stroke="url(#tg1)" stroke-width="3.6" stroke-linecap="round"/>
+        <path d="M21 23 h22 M32 23 v22" fill="none" stroke="url(#tg1)" stroke-width="5.4" stroke-linecap="round"/>
+      </svg>
+      <span class="logo-word">TRIVO</span>
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#modules" data-i="nav_modules">产品模块</a>
+      <a href="#gating" data-i="nav_gating">按需订阅</a>
+      <a href="#workers" data-i="nav_workers">给一线员工</a>
+      <a href="#pricing" data-i="nav_pricing">价格</a>
+      <a href="#faq" data-i="nav_faq">常见问题</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-seg" role="group" aria-label="Language">
+        <button id="lang-zh" class="on">中文</button>
+        <button id="lang-en">EN</button>
+      </div>
+      <a class="btn btn-primary btn-sm" href="app.html" data-i="nav_demo">体验演示</a>
+      <button class="nav-burger btn" id="burger" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- mobile drawer -->
+<div class="mnav" id="mnav">
+  <div class="mnav-panel">
+    <button class="mnav-close" id="mnav-close" aria-label="Close">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <a href="#modules" data-i="nav_modules">产品模块</a>
+    <a href="#gating" data-i="nav_gating">按需订阅</a>
+    <a href="#workers" data-i="nav_workers">给一线员工</a>
+    <a href="#pricing" data-i="nav_pricing">价格</a>
+    <a href="#faq" data-i="nav_faq">常见问题</a>
+    <a class="btn btn-primary" href="app.html" data-i="nav_demo">体验演示</a>
+  </div>
+</div>
+
+<main id="top">
+
+<!-- ======================= HERO ======================= -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="wrap hero-inner">
+    <div>
+      <div class="h-eyebrow" data-i="hero_eyebrow">为马来西亚中小企业打造</div>
+      <h1 data-i-html="hero_h1">一个团队，<br><span class="grad-text">一个系统。</span></h1>
+      <p class="hero-sub" data-i="hero_sub">考勤、人事工资、任务、库存采购、车队机械 — 全部放进同一个 Trivo。需要哪个模块，就开哪个，一个价钱一目了然。</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary btn-lg" href="app.html" data-i="hero_cta1">打开互动演示</a>
+        <a class="btn btn-lg" href="#gating" data-i="hero_cta2">看看怎么按需订阅</a>
+      </div>
+      <div class="hero-points">
+        <span class="hero-point"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg><span data-i="hero_p1">不用装 App，手机打开就能用</span></span>
+        <span class="hero-point"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg><span data-i="hero_p2">中文 · English · BM</span></span>
+        <span class="hero-point"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg><span data-i="hero_p3">工地没网也能打卡</span></span>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="phone" aria-hidden="true">
+        <div class="phone-screen">
+          <div class="ps-head">
+            <span class="ps-ava">AL</span>
+            <div>
+              <div class="ps-hi" data-i="ph_hi">早上好，阿龙</div>
+              <div class="ps-sub" data-i="ph_sub">Bayan Lepas 二期工地</div>
+            </div>
+          </div>
+          <div class="ps-tiles">
+            <div class="ps-tile main">
+              <span class="ps-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span>
+              <strong data-i="ph_clock">打卡上班</strong>
+              <span data-i="ph_clock_sub">拍照 + 定位，一按完成</span>
+            </div>
+            <div class="ps-tile">
+              <span class="ps-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#35577D" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3 10.5h18"/></svg></span>
+              <strong data-i="ph_leave">请假</strong>
+              <span data-i="ph_leave_sub">两步提交</span>
+            </div>
+            <div class="ps-tile">
+              <span class="ps-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#35577D" stroke-width="2" stroke-linecap="round"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.8"/></svg></span>
+              <strong data-i="ph_claim">报销</strong>
+              <span data-i="ph_claim_sub">拍收据就好</span>
+            </div>
+          </div>
+          <div class="ps-today">
+            <span data-i="ph_today">今天</span>
+            <b>07:02 — ·</b>
+          </div>
+        </div>
+      </div>
+      <div class="float-chip fc-1"><span class="dot" style="background:#35C78F"></span><span data-i="fc1">阿末 已打卡 · 07:02</span></div>
+      <div class="float-chip fc-2"><span class="dot" style="background:#E8B04B"></span><span data-i="fc2">水泥库存低 — 建议补货</span></div>
+      <div class="float-chip fc-3"><span class="dot" style="background:#4D7CF7"></span><span data-i="fc3">工资单已生成 · 11 人</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= STRIP ======================= -->
+<div class="strip">
+  <div class="wrap strip-inner">
+    <div class="strip-item rv"><b class="grad-text">1</b><span data-i="st1">个系统，替代一堆 Excel 和群组</span></div>
+    <div class="strip-item rv rv-d1"><b class="grad-text">6</b><span data-i="st2">个模块，按需订阅</span></div>
+    <div class="strip-item rv rv-d2"><b class="grad-text">2</b><span data-i="st3">步内完成打卡、请假、报销</span></div>
+    <div class="strip-item rv rv-d3"><b class="grad-text">RM0</b><span data-i="st4">核心平台，免费开始</span></div>
+  </div>
+</div>
+
+<!-- ======================= MODULES ======================= -->
+<section id="modules">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="h-eyebrow" data-i="mod_eyebrow">产品模块</div>
+      <h2 data-i="mod_h2">生意的每一块，都有自己的位子</h2>
+      <p data-i="mod_sub">每个模块独立订阅、独立好用，合在一起就是一个完整的系统。数据只输入一次，考勤自动算进工资，采购自动变成账目。</p>
+    </div>
+    <div class="mod-grid" id="mod-grid"><!-- JS renders cards --></div>
+  </div>
+</section>
+
+<!-- ======================= GATING ======================= -->
+<section id="gating" class="tight">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="h-eyebrow" data-i="gate_eyebrow">按需订阅</div>
+      <h2 data-i="gate_h2">只付你用的，界面也只显示你开的</h2>
+      <p data-i="gate_sub">没订阅的模块不会出现在你员工的系统里 — 不收费，也不碍眼。试试下面的开关，右边就是你公司会看到的样子。</p>
+    </div>
+    <div class="gate-wrap rv">
+      <div class="gate-left">
+        <h3 data-i="gate_pick">选你需要的模块</h3>
+        <p data-i="gate_pick_sub">随时可以加，随时可以停。</p>
+        <div class="gate-toggles" id="gate-toggles"></div>
+        <div class="gate-total">
+          <span class="num grad-text" id="gate-total">RM 0</span>
+          <span class="per" data-i="gate_per">/ 月 · 整个团队</span>
+        </div>
+        <p class="gate-note" data-i="gate_note">示例价格 · 适用 50 人以下团队</p>
+      </div>
+      <div class="gate-preview" aria-label="App preview">
+        <div class="gp-top"><i></i><i></i><i></i><span>app.trivo — <span data-i="gate_company">你的公司</span></span></div>
+        <div class="gp-body">
+          <div class="gp-nav" id="gp-nav"></div>
+          <div class="gp-main"><div class="gp-cards" id="gp-cards"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= WORKERS ======================= -->
+<section id="workers">
+  <div class="wrap worker-wrap">
+    <div>
+      <div class="h-eyebrow" data-i="wk_eyebrow">给一线员工的设计</div>
+      <h2 class="rv" style="font-size:clamp(1.7rem,3.6vw,2.4rem); margin-bottom:10px" data-i="wk_h2">工地的大哥也能一秒上手</h2>
+      <p class="rv" style="color:var(--ink-2)" data-i="wk_sub">系统做得再强，员工不用就是零。Trivo 的员工端只有几个大按钮：上班、请假、报销。字大、按钮大、没有废话。</p>
+      <div class="wk-points">
+        <div class="wk-point rv">
+          <span class="wk-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.5A4.5 4.5 0 0 1 9.6 5.2a4.5 4.5 0 0 1 4.8 0A4.5 4.5 0 1 1 22 8.5M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/><path d="m9 15 2 2 4-4"/></svg></span>
+          <div>
+            <h4 data-i="wk1_t">没网络？照样打卡</h4>
+            <p data-i="wk1_p">工地信号差是常态。打卡先存在手机里，一有网络自动补传，一条记录都不会丢。</p>
+          </div>
+        </div>
+        <div class="wk-point rv rv-d1">
+          <span class="wk-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
+          <div>
+            <h4 data-i="wk2_t">不需要 NFC，不需要新设备</h4>
+            <p data-i="wk2_p">拍一张带时间、日期、地点水印的照片就是出勤证明。任何一台普通手机都做得到。</p>
+          </div>
+        </div>
+        <div class="wk-point rv rv-d2">
+          <span class="wk-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.4 3.4-5.5 6.5-5.5s5.7 2.1 6.5 5.5"/><path d="M16 5.2a3.5 3.5 0 0 1 0 5.6M17.8 14.9c1.9.8 3.2 2.6 3.7 5.1"/></svg></span>
+          <div>
+            <h4 data-i="wk3_t">主管一眼看完全场</h4>
+            <p data-i="wk3_p">谁到了、谁请假、谁申请加班 — 主管手机上一排看完，一键批准，不用再追着问。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rv rv-d1">
+      <div class="stamp-card" role="img" aria-label="Timestamped site photo example">
+        <span class="stamp-verify">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg>
+          <span data-i="stamp_verified">已验证出勤</span>
+        </span>
+        <div class="stamp-map"></div>
+        <div class="stamp-time">
+          <b>07:02<small style="font-size:.85rem"> am</small></b>
+          <span data-i="stamp_in">上班打卡 · Ah Long</span>
+        </div>
+        <div class="stamp-meta">
+          <span data-i="stamp_date">2026年10月12日 · 星期一</span><br>
+          Persiaran Bayan Indah, 11900 Bayan Lepas, Pulau Pinang<br>
+          5.3315°N, 100.3087°E
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= STEPS ======================= -->
+<section class="tight" id="steps">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="h-eyebrow" data-i="step_eyebrow">开始使用</div>
+      <h2 data-i="step_h2">当天就能用起来</h2>
+      <p data-i="step_sub">不用换掉现有的 SQL 或 Excel — 先跟它们并行，觉得顺了再慢慢交过来。</p>
+    </div>
+    <div class="steps">
+      <div class="step-card rv">
+        <h3 data-i="s1_t">选模块</h3>
+        <p data-i="s1_p">从一个模块开始也行。很多客户先开考勤，第二个月才加工资和库存。</p>
+      </div>
+      <div class="step-card rv rv-d1">
+        <h3 data-i="s2_t">导入员工名单</h3>
+        <p data-i="s2_p">把现有的 Excel 名单发给我们，当天帮你设置好。每个员工收到一条 WhatsApp 链接就能登录。</p>
+      </div>
+      <div class="step-card rv rv-d2">
+        <h3 data-i="s3_t">开工</h3>
+        <p data-i="s3_p">第一个月免费试用，我们陪你跑完第一轮工资。不满意，数据导出还给你，不绑约。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PRICING ======================= -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="h-eyebrow" data-i="pr_eyebrow">价格</div>
+      <h2 data-i="pr_h2">简单到可以心算</h2>
+      <p data-i="pr_sub">按模块、按月收费，整个团队一个价，不按人头。先免费试用一个月。</p>
+    </div>
+    <div class="price-grid">
+      <div class="price-card rv">
+        <div class="price-name" data-i="p1_name">核心平台</div>
+        <div class="price-for" data-i="p1_for">工作台 + 员工名单 + 公告，先用起来</div>
+        <div class="price-amt"><b>RM 0</b><span data-i="p_mo">/ 月</span></div>
+        <ul class="price-feats">
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg><span data-i="p1_f1">公司工作台与提醒</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg><span data-i="p1_f2">员工资料与证件到期提醒</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg><span data-i="p1_f3">中文 / English / BM</span></li>
+        </ul>
+        <a class="btn" href="app.html" data-i="p_try">先试演示</a>
+      </div>
+      <div class="price-card rv rv-d1">
+        <div class="price-name" data-i="p2_name">单个模块</div>
+        <div class="price-for" data-i="p2_for">需要哪个开哪个，随时加减</div>
+        <div class="price-amt"><b>RM 59</b><span data-i="p2_mo">/ 模块 / 月</span></div>
+        <ul class="price-feats">
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg><span data-i="p2_f1">六个模块任选</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg><span data-i="p2_f2">不按人头收费</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg><span data-i="p2_f3">WhatsApp 支持，讲人话</span></li>
+        </ul>
+        <a class="btn" href="#contact" data-i="p_talk">聊一聊</a>
+      </div>
+      <div class="price-card hot rv rv-d2">
+        <span class="price-pop" data-i="p3_pop">最划算</span>
+        <div class="price-name">Trivo One</div>
+        <div class="price-for" data-i="p3_for">全部六个模块 + 优先支持</div>
+        <div class="price-amt"><b>RM 199</b><span data-i="p_mo2">/ 月</span></div>
+        <ul class="price-feats">
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg><span data-i="p3_f1">六个模块全开</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg><span data-i="p3_f2">帮你导入现有 Excel / SQL 数据</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.5 5 5 10-11"/></svg><span data-i="p3_f3">陪跑第一轮工资与 e-Invoice</span></li>
+        </ul>
+        <a class="btn btn-primary" href="#contact" data-i="p3_cta">免费试用一个月</a>
+      </div>
+    </div>
+    <p class="price-foot" data-i="pr_foot">示例价格，正式价格以报价单为准 · 适合 50 人以下团队，更大团队请联系我们</p>
+  </div>
+</section>
+
+<!-- ======================= FAQ ======================= -->
+<section id="faq" class="tight">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="h-eyebrow">FAQ</div>
+      <h2 data-i="faq_h2">老板们最常问的</h2>
+    </div>
+    <div class="faq-list" id="faq-list"></div>
+  </div>
+</section>
+
+<!-- ======================= FINAL CTA ======================= -->
+<section class="final" id="contact">
+  <div class="wrap">
+    <svg class="final-mark" viewBox="0 0 64 64" aria-hidden="true">
+      <defs><linearGradient id="tg2" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#23E2C2"/><stop offset="1" stop-color="#4D7CF7"/>
+      </linearGradient></defs>
+      <path d="M8 42 V14 a6 6 0 0 1 6-6 h36 a6 6 0 0 1 6 6 v36 a6 6 0 0 1-6 6 H26" fill="none" stroke="url(#tg2)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M21 23 h22 M32 23 v22" fill="none" stroke="url(#tg2)" stroke-width="5" stroke-linecap="round"/>
+    </svg>
+    <h2 data-i="fin_h2">把生意放进一个系统</h2>
+    <p data-i="fin_sub">十五分钟，我们用你公司的例子走一遍 Trivo。不满意就当交个朋友。</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary btn-lg" href="https://wa.me/60124768819?text=Hi%20Trivo%2C%20%E6%88%91%E6%83%B3%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.7-1.2A9 9 0 1 0 12 3z"/><path d="M8.8 9.2c.3-.8.7-.8 1-.8h.8l.9 2-.8 1a6.6 6.6 0 0 0 3 3l1-.9 2 1v.8c0 .3 0 .7-.8 1-3.3 1.2-7.9-3.4-7.4-6.3z"/></svg>
+        <span data-i="fin_wa">WhatsApp 我们</span></a>
+      <a class="btn btn-lg" href="app.html" data-i="fin_demo">先自己玩玩演示</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ======================= FOOTER ======================= -->
+<footer>
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-left">
+        <a class="logo" href="#top" aria-label="Trivo">
+          <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true">
+            <defs><linearGradient id="tg3" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#23E2C2"/><stop offset="1" stop-color="#4D7CF7"/>
+            </linearGradient></defs>
+            <path d="M8 42 V14 a6 6 0 0 1 6-6 h36 a6 6 0 0 1 6 6 v36 a6 6 0 0 1-6 6 H26" fill="none" stroke="url(#tg3)" stroke-width="3.6" stroke-linecap="round"/>
+            <path d="M21 23 h22 M32 23 v22" fill="none" stroke="url(#tg3)" stroke-width="5.4" stroke-linecap="round"/>
+          </svg>
+          <span class="logo-word" style="font-size:.95rem">TRIVO</span>
+        </a>
+        <p data-i="foot_tag">One team, one system. 由真正经营建筑与贸易生意的团队，在槟城打造。</p>
+      </div>
+      <div class="foot-links">
+        <div class="foot-col">
+          <b data-i="foot_product">产品</b>
+          <a href="#modules" data-i="nav_modules">产品模块</a>
+          <a href="#pricing" data-i="nav_pricing">价格</a>
+          <a href="app.html" data-i="nav_demo">体验演示</a>
+        </div>
+        <div class="foot-col">
+          <b data-i="foot_contact">联系</b>
+          <a href="https://wa.me/60124768819" target="_blank" rel="noopener">WhatsApp</a>
+          <a href="mailto:hello@trivio.com">hello@trivio.com</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>© 2026 Trivo</span>
+      <span data-i="foot_demo_note">演示网站 · 内容与价格仅供展示</span>
+      <span class="spacer">Penang, Malaysia</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/landing.js"></script>
+</body>
+</html>
