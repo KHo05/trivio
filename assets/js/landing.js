@@ -180,6 +180,7 @@ function applyLang() {
   document.querySelectorAll("[data-i-html]").forEach((el) => { el.innerHTML = t(el.dataset.iHtml); });
   document.getElementById("lang-zh").classList.toggle("on", LANG === "zh");
   document.getElementById("lang-en").classList.toggle("on", LANG === "en");
+  if (document.getElementById("dots").children.length) renderDots();
   renderModules();
   renderGate();
   renderFaq();
@@ -334,9 +335,49 @@ function initNav() {
   });
 }
 
+/* ---------------- paged navigation ---------------- */
+const PAGE_LABELS = {
+  hero: { zh: "首页", en: "Home" }, modules: { zh: "产品模块", en: "Modules" }, gating: { zh: "按需订阅", en: "Pick & pay" },
+  workers: { zh: "给一线员工", en: "For crews" }, pricing: { zh: "价格", en: "Pricing" }, faq: { zh: "常见问题", en: "FAQ" }, contact: { zh: "联系", en: "Contact" },
+};
+const PAGES = Array.from(document.querySelectorAll(".page"));
+let activePage = 0;
+
+function renderDots() {
+  const nav = document.getElementById("dots");
+  nav.innerHTML = PAGES.map((p, i) => `<button data-dot="${i}" class="${i === activePage ? "on" : ""}" aria-label="${PAGE_LABELS[p.dataset.page][LANG]}"><span>${PAGE_LABELS[p.dataset.page][LANG]}</span></button>`).join("");
+  nav.querySelectorAll("[data-dot]").forEach((b) => b.addEventListener("click", () => goPage(+b.dataset.dot)));
+}
+function setActive(i) {
+  if (i === activePage) return;
+  activePage = i;
+  document.querySelectorAll("#dots [data-dot]").forEach((b, k) => b.classList.toggle("on", k === i));
+}
+function goPage(i) {
+  i = Math.max(0, Math.min(PAGES.length - 1, i));
+  PAGES[i].scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function initPaging() {
+  renderDots();
+  // which page is on screen (center of viewport)
+  const pio = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) setActive(PAGES.indexOf(e.target)); });
+  }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
+  PAGES.forEach((p) => pio.observe(p));
+  // keyboard paging (ignore when typing in a field)
+  window.addEventListener("keydown", (e) => {
+    if (e.target.matches("input, textarea, select")) return;
+    if (e.key === "ArrowDown" || e.key === "PageDown") { e.preventDefault(); goPage(activePage + 1); }
+    else if (e.key === "ArrowUp" || e.key === "PageUp") { e.preventDefault(); goPage(activePage - 1); }
+    else if (e.key === "Home") { e.preventDefault(); goPage(0); }
+    else if (e.key === "End") { e.preventDefault(); goPage(PAGES.length - 1); }
+  });
+}
+
 /* ---------------- boot ---------------- */
 document.getElementById("lang-zh").addEventListener("click", () => setLang("zh"));
 document.getElementById("lang-en").addEventListener("click", () => setLang("en"));
 initNav();
+initPaging();
 applyLang();
 observeReveals();

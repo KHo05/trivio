@@ -67,7 +67,7 @@
 <main id="top">
 
 <!-- ======================= HERO ======================= -->
-<section class="hero" id="hero">
+<section class="hero page" id="hero" data-page="hero">
   <div class="hero-bg"></div>
   <div class="hero-grid-lines"></div>
   <div class="wrap hero-inner">
@@ -124,10 +124,7 @@
       <div class="float-chip fc-3"><span class="dot" style="background:#4D7CF7"></span><span data-i="fc3">工资单已生成 · 11 人</span></div>
     </div>
   </div>
-</section>
-
-<!-- ======================= STRIP ======================= -->
-<div class="strip">
+  <div class="strip">
   <div class="wrap strip-inner">
     <div class="strip-item rv"><b class="grad-text">1</b><span data-i="st1">个系统，替代一堆 Excel 和群组</span></div>
     <div class="strip-item rv rv-d1"><b class="grad-text">6</b><span data-i="st2">个模块，按需订阅</span></div>
@@ -135,9 +132,10 @@
     <div class="strip-item rv rv-d3"><b class="grad-text">RM0</b><span data-i="st4">核心平台，免费开始</span></div>
   </div>
 </div>
+</section>
 
 <!-- ======================= MODULES ======================= -->
-<section id="modules">
+<section id="modules" class="page" data-page="modules">
   <div class="wrap">
     <div class="sec-head rv">
       <div class="h-eyebrow" data-i="mod_eyebrow">产品模块</div>
@@ -149,7 +147,7 @@
 </section>
 
 <!-- ======================= GATING ======================= -->
-<section id="gating" class="tight">
+<section id="gating" class="page" data-page="gating">
   <div class="wrap">
     <div class="sec-head rv">
       <div class="h-eyebrow" data-i="gate_eyebrow">按需订阅</div>
@@ -179,7 +177,7 @@
 </section>
 
 <!-- ======================= WORKERS ======================= -->
-<section id="workers">
+<section id="workers" class="page" data-page="workers">
   <div class="wrap worker-wrap">
     <div>
       <div class="h-eyebrow" data-i="wk_eyebrow">给一线员工的设计</div>
@@ -230,33 +228,8 @@
   </div>
 </section>
 
-<!-- ======================= STEPS ======================= -->
-<section class="tight" id="steps">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <div class="h-eyebrow" data-i="step_eyebrow">开始使用</div>
-      <h2 data-i="step_h2">当天就能用起来</h2>
-      <p data-i="step_sub">不用换掉现有的 SQL 或 Excel — 先跟它们并行，觉得顺了再慢慢交过来。</p>
-    </div>
-    <div class="steps">
-      <div class="step-card rv">
-        <h3 data-i="s1_t">选模块</h3>
-        <p data-i="s1_p">从一个模块开始也行。很多客户先开考勤，第二个月才加工资和库存。</p>
-      </div>
-      <div class="step-card rv rv-d1">
-        <h3 data-i="s2_t">导入员工名单</h3>
-        <p data-i="s2_p">把现有的 Excel 名单发给我们，当天帮你设置好。每个员工收到一条 WhatsApp 链接就能登录。</p>
-      </div>
-      <div class="step-card rv rv-d2">
-        <h3 data-i="s3_t">开工</h3>
-        <p data-i="s3_p">第一个月免费试用，我们陪你跑完第一轮工资。不满意，数据导出还给你，不绑约。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ======================= PRICING ======================= -->
-<section id="pricing">
+<section id="pricing" class="page" data-page="pricing">
   <div class="wrap">
     <div class="sec-head rv">
       <div class="h-eyebrow" data-i="pr_eyebrow">价格</div>
@@ -304,18 +277,27 @@
 </section>
 
 <!-- ======================= FAQ ======================= -->
-<section id="faq" class="tight">
+<section id="faq" class="page" data-page="faq">
   <div class="wrap">
-    <div class="sec-head rv">
-      <div class="h-eyebrow">FAQ</div>
-      <h2 data-i="faq_h2">老板们最常问的</h2>
+    <div class="sec-head rv" style="margin-bottom:18px">
+      <div class="h-eyebrow" data-i="step_eyebrow">开始使用</div>
+      <h2 data-i="step_h2">当天就能用起来</h2>
+      <p data-i="step_sub">不用换掉现有的 SQL 或 Excel — 先跟它们并行，觉得顺了再慢慢交过来。</p>
     </div>
-    <div class="faq-list" id="faq-list"></div>
+    <div class="steps">
+      <div class="step-card rv"><div><h3 data-i="s1_t">选模块</h3><p data-i="s1_p">从一个模块开始也行。很多客户先开考勤，第二个月才加工资和库存。</p></div></div>
+      <div class="step-card rv rv-d1"><div><h3 data-i="s2_t">导入员工名单</h3><p data-i="s2_p">把现有的 Excel 名单发给我们，当天帮你设置好。每个员工收到一条 WhatsApp 链接就能登录。</p></div></div>
+      <div class="step-card rv rv-d2"><div><h3 data-i="s3_t">开工</h3><p data-i="s3_p">第一个月免费试用，我们陪你跑完第一轮工资。不满意，数据导出还给你，不绑约。</p></div></div>
+    </div>
+    <div class="faq-wrap">
+      <div class="rv"><div class="h-eyebrow">FAQ</div><h2 style="font-size:clamp(1.4rem,2.6vw,1.9rem)" data-i="faq_h2">老板们最常问的</h2></div>
+      <div class="faq-list rv rv-d1" id="faq-list"></div>
+    </div>
   </div>
 </section>
 
 <!-- ======================= FINAL CTA ======================= -->
-<section class="final" id="contact">
+<section class="final page" id="contact" data-page="contact">
   <div class="wrap">
     <svg class="final-mark" viewBox="0 0 64 64" aria-hidden="true">
       <defs><linearGradient id="tg2" x1="0" y1="0" x2="1" y2="1">
@@ -333,11 +315,7 @@
       <a class="btn btn-lg" href="app.html" data-i="fin_demo">先自己玩玩演示</a>
     </div>
   </div>
-</section>
-</main>
-
-<!-- ======================= FOOTER ======================= -->
-<footer>
+  <footer>
   <div class="wrap">
     <div class="foot-inner">
       <div class="foot-left">
@@ -374,6 +352,11 @@
     </div>
   </div>
 </footer>
+</section>
+</main>
+<nav class="dots" id="dots" aria-label="Pages"></nav>
+
+
 
 <script src="assets/js/landing.js"></script>
 </body>
