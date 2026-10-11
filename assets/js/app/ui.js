@@ -42,8 +42,10 @@ function icon(name, size = 20, sw = 1.8) { return `<svg width="${size}" height="
 function logoMark(size = 28) { return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg${size}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#19D3B4"/><stop offset="1" stop-color="#4D7CF7"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="#16222F"/><path d="M14 42V18a4 4 0 0 1 4-4h28a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H28" fill="none" stroke="url(#lg${size})" stroke-width="3" stroke-linecap="round"/><path d="M24 25h16M32 25v16" fill="none" stroke="url(#lg${size})" stroke-width="4.4" stroke-linecap="round"/></svg>`; }
 function esc(s) { return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 
+function buzz(ms = 12) { try { if (navigator.vibrate && matchMedia("(pointer: coarse)").matches) navigator.vibrate(ms); } catch (e) { /* ok */ } }
 let toastTimer = null;
 function toast(msg, kind = "ok") {
+  buzz(kind === "warn" ? [20, 40, 20] : 12);
   const root = document.getElementById("toast-root"); root.querySelectorAll(".toast").forEach((e) => e.remove());
   const el = document.createElement("div"); el.className = `toast ${kind}`;
   el.innerHTML = `${icon(kind === "warn" ? "alert" : "check", 20)}<span>${esc(msg)}</span>`; root.appendChild(el);
@@ -78,7 +80,7 @@ function downloadCsv(filename, rows) {
 }
 function stampCard(name, label) {
   const d = NOW.toLocaleDateString(LANG === "zh" ? "zh-CN" : "en-MY", { year: "numeric", month: "long", day: "numeric", weekday: "short" });
-  return `<div class="stamp"><span class="stamp-verify">${icon("check", 11, 3)} ${esc(t("wkVerified"))}</span><div class="stamp-map"></div>
+  return `<div class="stamp"><svg class="stamp-scene" viewBox="0 0 400 440" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><g fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2"><path d="M60 330V120h110v210"/><path d="M60 160h110M60 200h110M60 240h110M60 280h110M96 120v210M134 120v210"/><path d="M250 330V60"/><path d="M250 60H380M250 60L230 80M258 60l-8 14M274 60l-8 14M290 60l-8 14M306 60l-8 14M322 60l-8 14M338 60l-8 14M354 60l-8 14M370 60l-8 14"/><path d="M250 74h126M330 74v70"/><path d="M322 144h16v12h-16z"/><path d="M186 330h44v-40h-44z"/></g><g fill="rgba(255,255,255,.1)"><rect x="60" y="120" width="110" height="210"/><rect x="186" y="290" width="44" height="40"/></g><path d="M0 330h400v110H0z" fill="rgba(0,0,0,.25)"/><path d="M0 330h400" stroke="rgba(255,255,255,.35)" stroke-width="2"/></svg><span class="stamp-verify">${icon("check", 11, 3)} ${esc(t("wkVerified"))}</span><div class="stamp-map"></div>
     <div class="stamp-time"><b id="stamp-clock">${timeNow()}</b><span>${esc(label)} · ${esc(name)}</span></div>
     <div class="stamp-meta">${esc(d)}<br>Persiaran Bayan Indah, 11900 Bayan Lepas, Pulau Pinang<br>5.3315°N, 100.3087°E</div></div>`;
 }

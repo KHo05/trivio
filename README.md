@@ -11,7 +11,7 @@ Plain HTML / CSS / JavaScript. No build step, no framework, no backend — deplo
 
 ## Demo highlights
 
-- **Subscription gating** — Owner → Settings & Plan → flip a module; it instantly appears/disappears for every role, including the worker's home screen. Locked modules show a plain-language unlock page.
+- **Subscription gating** — Owner → Settings & Plan → flip a module; it instantly appears/disappears for every role, including the worker's home screen. Locked modules show a plain-language unlock page. Bill is RM 59 per module, capped at RM 199 (Trivo One) from the fourth module.
 - **Worker mode** — big-button mobile view: photo + GPS clock-in with a timestamp watermark, 2-tap leave, snap-a-receipt claims, tasks with photo submit, payslip, e-sign on a signature pad.
 - **Offline-first** — toggle "simulate no site signal": submissions queue on the phone and auto-upload when signal returns; supervisor sees them marked *Synced*.
 - **Chain of work** — what the worker submits shows up in the supervisor's approvals; approving a leave updates the attendance roll; scanning stock updates inventory; purchase receipts add to stock; quotes convert to invoices and submit to e-Invoice.

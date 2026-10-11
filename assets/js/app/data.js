@@ -175,7 +175,9 @@ function payrollFor(emp) {
   return { att, basic, otPay, allowance, gross, epf, socso, eis, net: Math.round((gross - epf - socso - eis) * 100) / 100 };
 }
 const payrollTotal = () => DB.employees.reduce((s, e) => s + payrollFor(e).net, 0);
-const monthlyBill = () => MODULES.reduce((s, m) => s + (DB.subs[m.id] ? m.price : 0), 0);
+const monthlyRaw = () => MODULES.reduce((s, m) => s + (DB.subs[m.id] ? m.price : 0), 0);
+const PLAN_CAP = 199;
+const monthlyBill = () => Math.min(PLAN_CAP, monthlyRaw());
 
 function buildAlerts() {
   const A = [];
