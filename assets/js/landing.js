@@ -154,14 +154,14 @@ const DECK = {
     this.setVh(); this.decideMode(); this.renderDots();
     window.addEventListener("resize", () => { this.setVh(); this.decideMode(); this.apply(true); });
     window.addEventListener("orientationchange", () => setTimeout(() => { this.setVh(); this.decideMode(); this.apply(true); }, 60));
-    window.addEventListener("wheel", (e) => this.onWheel(e), { passive: false });
+    window.addEventListener("wheel", (e) => this.onWheel(e), { passive: false, capture: true });
     window.addEventListener("keydown", (e) => this.onKey(e));
     window.addEventListener("touchstart", (e) => { if (this.flow) return; this.touchY = e.touches[0].clientY; this.touchT = Date.now(); }, { passive: true });
     window.addEventListener("touchend", (e) => { if (this.flow || this.touchY == null) return; const dy = this.touchY - e.changedTouches[0].clientY; this.touchY = null; if (Math.abs(dy) > 50 && Date.now() - this.touchT < 900) this.go(this.i + (dy > 0 ? 1 : -1)); }, { passive: true });
     document.querySelectorAll("[data-goto]").forEach((a) => a.addEventListener("click", (e) => { const idx = this.pages.findIndex((p) => p.dataset.page === a.dataset.goto); if (idx < 0) return; e.preventDefault(); document.getElementById("mnav").classList.remove("open"); if (this.flow) this.pages[idx].scrollIntoView({ behavior: "smooth" }); else this.go(idx); }));
     const h = location.hash.replace("#", ""); const start = this.pages.findIndex((p) => p.dataset.page === h); this.i = start > 0 ? start : 0;
     this.apply(true); this.flowReveals();
-    this.track.addEventListener("transitionend", (e) => { if (e.target === this.track) { this.busy = false; this.pages.forEach((p) => p.classList.remove("was")); } });
+    this.track.addEventListener("transitionend", (e) => { if (e.target === this.track) this.landed(); });
     this.initTilt();
   },
   setVh() { document.documentElement.style.setProperty("--vh", (window.innerHeight * 0.01) + "px"); },
@@ -187,19 +187,30 @@ const DECK = {
   go(n) {
     n = Math.max(0, Math.min(this.pages.length - 1, n));
     if (n === this.i || this.busy || this.flow) return;
-    this.busy = true; this.i = n; this.apply(false);
-    setTimeout(() => { this.busy = false; this.pages.forEach((p) => p.classList.remove("was")); }, 1150); // safety net if transitionend is swallowed
+    this.busy = true; this.goAt = performance.now(); this.i = n; this.apply(false);
+    clearTimeout(this.safety); this.safety = setTimeout(() => this.landed(), 1150); // safety net if transitionend is swallowed
+  },
+  landed() {
+    if (!this.busy) return;
+    this.busy = false; clearTimeout(this.safety); this.pages.forEach((p) => p.classList.remove("was"));
+    const q = this.queued; this.queued = 0; if (q) this.go(this.i + q);
   },
   onWheel(e) {
     if (this.flow) return;
     e.preventDefault();
-    const now = performance.now();
+    const now = performance.now(); const d = e.deltaY, a = Math.abs(d);
     const gap = now - this.lastWheel; this.lastWheel = now;
-    if (gap > 260) this.gestureOpen = true;            // a new physical gesture started
-    if (!this.gestureOpen || this.busy) return;
-    if (Math.abs(e.deltaY) < 6) return;               // ignore inertia dust
+    const lastA = this.lastAbs || 0, lastDir = this.lastDir || 0; this.lastAbs = a; if (a >= 1) this.lastDir = d > 0 ? 1 : -1;
+    /* A notched mouse wheel reports whole-line / 100px steps with no inertia: every notch is a deliberate gesture. */
+    const notched = e.deltaMode !== 0 || (a >= 100 && Number.isInteger(d));
+    /* Trackpads: a gesture is new after a pause, when the finger reverses, or when the delta rises sharply
+       (a fresh swipe starting while the previous swipe's inertia is still trickling in). */
+    if (notched || gap > 260 || (a >= 1 && lastDir && (d > 0 ? 1 : -1) !== lastDir) || (a >= 14 && a > lastA * 2.2)) this.gestureOpen = true;
+    if (!this.gestureOpen) return;
+    if (a < 6) return;                                 // ignore inertia dust
+    if (this.busy) { if (a >= 20 && now - this.goAt > 450) { this.queued = d > 0 ? 1 : -1; this.gestureOpen = false; } return; } // fast scrollers: remember the next page, play it when this slide lands
     this.gestureOpen = false;                          // one page per gesture
-    this.go(this.i + (e.deltaY > 0 ? 1 : -1));
+    this.go(this.i + (d > 0 ? 1 : -1));
   },
   onKey(e) {
     if (this.flow || e.target.matches("input, textarea, select")) return;

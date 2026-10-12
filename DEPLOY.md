@@ -70,6 +70,10 @@ Alternative that avoids DNS fiddling: change the domain's **nameservers** to `ns
 
 ---
 
+## Updating files without stale caches
+
+Browsers cache the files under `assets/` for an hour. The HTML links to them with a version tag (`landing.js?v=20261012a`). When you change a CSS or JS file, bump that tag in `index.html` / `app.html` (any new value works, e.g. today's date) so every visitor gets the new file immediately instead of the cached one.
+
 ## Everyday workflow after this
 
 ```bash
